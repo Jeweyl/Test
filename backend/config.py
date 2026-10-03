@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from database import db_url
 
 class Settings(BaseSettings):
     app_name: str = "Fast Try"
@@ -7,5 +8,5 @@ class Settings(BaseSettings):
         'localhost:3000'
     ]
     debug: bool = True
-    db_url: str = ''
+    db_url: str = db_url
     
