@@ -1,5 +1,9 @@
 from pydantic_settings import BaseSettings
-from database import db_url
+
+import os
+
+
+
 
 class Settings(BaseSettings):
     app_name: str = "Fast Try"
@@ -8,5 +12,11 @@ class Settings(BaseSettings):
         'localhost:3000'
     ]
     debug: bool = True
-    db_url: str = db_url
+    username: str = os.getenv(POSTGRES_USER)
+    password: str = os.getenv(POSTGRES_PASS)
+    host: str = os.getenv(POSTGRES_HOST)
+    port: int = os.getenv(POSTGRES_PORT)
+    database: str = os.getenv(POSTGRES_DB)
     
+    
+settings = Settings()
