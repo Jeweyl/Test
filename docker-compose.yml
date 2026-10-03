@@ -3,10 +3,10 @@ services:
     image: postgres:16
     expose: 
         - "5432"
-    env_file: .env
+    env_file: backend/.env
 
   backend:
     build: "./backend"
     ports: 
         - "8000:8000"
-    env_file: .env
+    env_file: backend/.env

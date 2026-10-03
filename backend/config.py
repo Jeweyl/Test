@@ -1,8 +1,5 @@
-from pydantic_settings import BaseSettings
-
-import os
-
-
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
 
 class Settings(BaseSettings):
@@ -12,11 +9,12 @@ class Settings(BaseSettings):
         'localhost:3000'
     ]
     debug: bool = True
-    username: str = os.getenv(POSTGRES_USER)
-    password: str = os.getenv(POSTGRES_PASS)
-    host: str = os.getenv(POSTGRES_HOST)
-    port: int = os.getenv(POSTGRES_PORT)
-    database: str = os.getenv(POSTGRES_DB)
+    model_config = SettingsConfigDict(env_file=".env")
+    username: str = Field(alias="POSTGRES_USER")
+    password: str = Field(alias="POSTGRES_PASS")
+    host: str = Field(alias="POSTGRES_HOST")
+    port: int = Field(alias="POSTGRES_PORT")
+    database: str = Field(alias="POSTGRES_DB")
     
     
 settings = Settings()
