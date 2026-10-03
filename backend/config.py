@@ -10,11 +10,11 @@ class Settings(BaseSettings):
     ]
     debug: bool = True
     model_config = SettingsConfigDict(env_file=".env")
-    username: str = Field(alias="POSTGRES_USER")
-    password: str = Field(alias="POSTGRES_PASS")
-    host: str = Field(alias="POSTGRES_HOST")
-    port: int = Field(alias="POSTGRES_PORT")
-    database: str = Field(alias="POSTGRES_DB")
+    username: str = Field(validation_alias="POSTGRES_USER")
+    password: str = Field(validation_alias="POSTGRES_PASS")
+    host: str = Field(validation_alias="POSTGRES_HOST")
+    port: int = Field(validation_alias="POSTGRES_PORT")
+    database: str = Field(validation_alias="POSTGRES_DB")
     
     
 settings = Settings()

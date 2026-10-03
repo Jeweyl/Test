@@ -17,7 +17,7 @@ engine = create_async_engine(
     url = db_url
 )
 
-session = async_sessionmaker(
+SessionLocal = async_sessionmaker(
     class_= AsyncSession, 
     bind= engine,
     expire_on_commit=False, 
