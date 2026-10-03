@@ -1,11 +1,11 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    app_name = "Fast Try"
-    cors = [
+    app_name: str = "Fast Try"
+    cors: list = [
         'localhost:8000',
         'localhost:3000'
     ]
-    debug = True
-    db_url = ''
+    debug: bool = True
+    db_url: str = ''
     
