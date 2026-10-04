@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 
@@ -47,3 +47,19 @@ async def get_section(session:AsyncSession=Depends(get_session)):
     )
     row = result.first()
     return {"id": row.id, "name":row.name}
+
+@app.delete("/section/{id}")
+async def section_del(id:int, session:AsyncSession = Depends(get_session)):
+    result = await session.execute(text("""
+        DELETE FROM section
+        WHERE id = :id
+        """),
+        {"id": id})
+    await session.commit()
+    row_count = result.rowcount 
+    if row_count < 1:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Не удалось найти ни одной строки с таким id'
+        )
+    return {"message":f"section by {id} deleted"}

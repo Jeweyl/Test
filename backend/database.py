@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy import URL
+from sqlalchemy.ext.declarative import declarative_base
 
 from config import settings
 
@@ -21,5 +22,6 @@ SessionLocal = async_sessionmaker(
     class_= AsyncSession, 
     bind= engine,
     expire_on_commit=False, 
-    
 )
+
+Base = declarative_base()
