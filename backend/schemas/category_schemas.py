@@ -11,7 +11,7 @@ class CategoryResponse(CategoryBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
     
-class CategoryListResponse(CategoryBase):
+class CategoryListResponse(BaseModel):
     categories: list[CategoryResponse]
     total_count: int
 
