@@ -9,7 +9,7 @@ class ProductService:
     def __init__(self, db:AsyncSession):
         self.product = ProductRepository(db)
     
-    async def get_all(self):
+    async def get_all(self) -> list[Product]:
         products = await self.product.get_all_product()
         result = [ProductResponse.model_validate(product) for product in products]
         return ProductListResponse(products=result, total = len(result))
