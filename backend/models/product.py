@@ -4,7 +4,6 @@ from sqlalchemy import String, Numeric, ForeignKey
 from decimal import Decimal
 
 from database import Base
-from category import Category
 
 class Product(Base):
     __tablename__ = "products"
@@ -14,4 +13,4 @@ class Product(Base):
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     description: Mapped[str|None] = mapped_column(String(500), nullable=True)
     category_id: Mapped[int | None] = mapped_column(ForeignKey("categories.id"), nullable=True)
-    category: Mapped[Category | None] = relationship("Category", back_populates="products")
+    category: Mapped["Category | None"] = relationship("Category", back_populates="products")
