@@ -25,5 +25,4 @@ class OrderRepository:
             order_items = order_items   
         )
         self.db.add(new_order)
-
-        await self.db.commit()
+        return new_order

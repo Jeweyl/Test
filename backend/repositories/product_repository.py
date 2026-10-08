@@ -22,10 +22,10 @@ class ProductRepository:
         return product
     
     async def get_by_ids(self, ids:list[int])->dict[int, Product]:
-        request = select(Product).where(Product.id.in_(ids))
+        request = select(Product).where(Product.id.in_(ids)).with_for_update()
         result = await self.db.execute(request)
         products = result.scalars().all()
-        product_dict:dict[int, dict] = {}
+        product_dict:dict[int, Product] = {}
         for product in products:
             product_dict[product.id] = product
         return product_dict
