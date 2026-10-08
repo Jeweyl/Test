@@ -1,0 +1,17 @@
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+
+from services.order_service import OrderService
+from schemas.order_schemas import OrderItemCreate, OrderCreate, OrderResponse
+from database import get_session
+
+router = APIRouter(
+    prefix="/router"
+)
+
+@router.post("/create_new", response_model=OrderResponse)
+async def create_new_order(data_new_order: OrderCreate, session:AsyncSession = Depends(get_session)):
+    service = OrderService(session)
+    new_order = await service.create_new_order(order_items=data_new_order.order_items, user_id=data_new_order.user_id)
+    return new_order

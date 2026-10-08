@@ -46,6 +46,8 @@ class OrderService:
                     )
                     
                 product.count -= order_item.count
+                
+                raise Exception("BOOM")
 
                 new_order_items.append(
                     OrderItem(
