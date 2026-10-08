@@ -7,6 +7,7 @@ class ProductBase(BaseModel):
     price: Decimal = Field(description="Price of product")
     description: str | None = None
     category_id: int | None = None
+    count: int
     
     
 class ProductCreate(ProductBase):

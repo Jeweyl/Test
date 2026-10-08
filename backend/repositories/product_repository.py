@@ -41,6 +41,7 @@ class ProductRepository:
             name=data.name,
             description=data.description,
             price=data.price,
+            count=data.count,
             category_id = data.category_id,
             )
         self.db.add(data)

@@ -37,7 +37,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.add_column('products', sa.Column('count', sa.Integer(), nullable=False))
+    op.add_column('products', sa.Column('count', sa.Integer(), nullable=False, server_default="1"))
     # ### end Alembic commands ###
 
 

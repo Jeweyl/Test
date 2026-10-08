@@ -14,13 +14,13 @@ class OrderService:
             
     async def get_all_orders(self) ->OrderListResponse:
         result = await self.order.get_all_orders()
-        return result
+        return OrderListResponse(orders=result)
     
     async def get_order_by_id(self, id:int) -> OrderResponse | None:
         result = await self.order.get_orders_by_id(id=id)
         if result is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-        return result
+        return OrderResponse.model_validate(result)
     
     async def create_new_order(self, order_items:list[OrderItemCreate], user_id:int = 1) -> OrderResponse:
         
@@ -46,8 +46,6 @@ class OrderService:
                     )
                     
                 product.count -= order_item.count
-                
-                raise Exception("BOOM")
 
                 new_order_items.append(
                     OrderItem(
@@ -62,7 +60,7 @@ class OrderService:
                 order_items=new_order_items
             )
 
-        return new_order
+        return OrderResponse.model_validate(new_order)
         
         
         

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from decimal import Decimal
 
@@ -12,6 +12,8 @@ class OrderItemCreate(OrderItemBase):
     pass
 
 class OrderItemResponse(OrderItemBase):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     order_id: int
     product_id: int
@@ -24,14 +26,16 @@ class OrderItemResponse(OrderItemBase):
 #Order
 class OrderBase(BaseModel):
     user_id: int
-    order_items: list[OrderItemCreate]
     
 class OrderCreate(OrderBase):
-    pass
+    order_items: list[OrderItemCreate]
 
 class OrderResponse(OrderBase):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     create_at: datetime
+    order_items: list[OrderItemResponse]
     
 class OrderListResponse(BaseModel):
     orders: list[OrderResponse]

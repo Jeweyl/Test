@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from sqlalchemy import select
 
 from models.order import OrderItem, Order
@@ -8,13 +9,13 @@ class OrderRepository:
         self.db = db
         
     async def get_all_orders(self) -> list[Order]:
-        request = select(Order)
+        request = select(Order).options(selectinload(Order.order_items))
         result = await self.db.execute(request)
         orders = result.scalars().all()
         return orders
     
     async def get_orders_by_id(self, id:int) -> Order|None:
-        request = select(Order).where(Order.id == id)
+        request = select(Order).where(Order.id == id).options(selectinload(Order.order_items))
         result = await self.db.execute(request)
         order = result.scalar_one_or_none()
         return order
