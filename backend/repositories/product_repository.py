@@ -21,6 +21,15 @@ class ProductRepository:
         product = result.scalar_one_or_none()
         return product
     
+    async def get_by_ids(self, ids:list[int])->dict[int, Product]:
+        request = select(Product).where(Product.id.in_(ids))
+        result = await self.db.execute(request)
+        products = result.scalars().all()
+        product_dict:dict[int, dict] = {}
+        for product in products:
+            product_dict[product.id] = product
+        return product_dict
+    
     async def get_by_category(self, category_id:int=None)->list[Product]:
         request = select(Product).where(Product.category_id == category_id)
         result = await self.db.execute(request)

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Numeric, ForeignKey
+from sqlalchemy import String, Numeric, ForeignKey, Integer
 
 from decimal import Decimal
 
@@ -13,4 +13,5 @@ class Product(Base):
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     description: Mapped[str|None] = mapped_column(String(500), nullable=True)
     category_id: Mapped[int | None] = mapped_column(ForeignKey("categories.id"), nullable=True)
+    count: Mapped[int] = mapped_column(Integer, default=1)
     category: Mapped["Category | None"] = relationship("Category", back_populates="products")
