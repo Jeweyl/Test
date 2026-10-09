@@ -46,7 +46,7 @@ class OrderService:
                     )
                     
                 product.count -= order_item.count
-
+            
                 new_order_items.append(
                     OrderItem(
                         product_id=product.id,
