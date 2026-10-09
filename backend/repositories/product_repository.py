@@ -52,8 +52,8 @@ class ProductRepository:
         product = await self.get_by_id(id=id)
         if product is None:
             return None
-        for key, value in data.items:
+        for key, value in data.items():
             setattr(product, key, value)
         await self.db.commit()
-        await self.db.refresh()
+        await self.db.refresh(product)
         return product

@@ -29,4 +29,4 @@ async def create_new_product(data_new_product:ProductCreate, session:AsyncSessio
 @router.put("/update/{id}", response_model=ProductResponse)
 async def update_product(id:int, data_update_product:ProductUpdate, session:AsyncSession = Depends(get_session), redis:Redis = Depends(get_redis)):
     service = ProductService(session, redis)
-    return await service.update_product(id=id, data=data_update_product)
+    return await service.update_product(id=id, data=data_update_product.model_dump())
