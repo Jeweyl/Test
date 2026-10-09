@@ -9,14 +9,16 @@ class ProductBase(BaseModel):
     category_id: int | None = None
     count: int
     
-    
 class ProductCreate(ProductBase):
     pass
+
+class ProductUpdate(ProductBase):
+    pass
+
 class ProductResponse(ProductBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
     
-
 class ProductListResponse(BaseModel):
     products: list[ProductResponse]
     total: int = Field(description="total number of product")

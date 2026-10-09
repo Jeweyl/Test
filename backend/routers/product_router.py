@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from redis.asyncio import Redis
 
 from services.product_service import ProductService
-from schemas.product_schema import ProductListResponse, ProductResponse, ProductCreate
+from schemas.product_schema import ProductUpdate, ProductListResponse, ProductResponse, ProductCreate
 from database import get_session
 from redis_client import get_redis
 
@@ -17,11 +17,16 @@ async def get_all_product(session:AsyncSession = Depends(get_session), redis:Red
     return await service.get_all()
 
 @router.get("/{id}", response_model=ProductResponse)
-async def get_by_id(id:int, session:AsyncSession = Depends(get_session)):
-    service = ProductService(session)
+async def get_by_id(id:int, session:AsyncSession = Depends(get_session), redis:Redis = Depends(get_redis)):
+    service = ProductService(session, redis)
     return await service.get_by_id(id)
 
 @router.post("/create_new", response_model=ProductResponse)
 async def create_new_product(data_new_product:ProductCreate, session:AsyncSession = Depends(get_session), redis:Redis = Depends(get_redis)):
     service = ProductService(session, redis)
     return await service.create_new(data=data_new_product)
+
+@router.put("/update/{id}", response_model=ProductResponse)
+async def update_product(id:int, data_update_product:ProductUpdate, session:AsyncSession = Depends(get_session), redis:Redis = Depends(get_redis)):
+    service = ProductService(session, redis)
+    return await service.update_product(id=id, data=data_update_product)

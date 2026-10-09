@@ -3,7 +3,7 @@ from fastapi import HTTPException, status
 from redis.asyncio import Redis
 
 from repositories.product_repository import ProductRepository
-from schemas.product_schema import ProductResponse, ProductListResponse, ProductCreate
+from schemas.product_schema import ProductResponse, ProductListResponse, ProductCreate, ProductUpdate
 from models.product import Product
 
 class ProductService:
@@ -32,10 +32,20 @@ class ProductService:
         return response 
             
     async def get_by_id(self, id:int)->ProductResponse | None:
+       cache_key = f"product:{id}"
+       cached = await self.redis.get(cache_key)
+       if cached is not None:
+           print("CACHE HIT")
+           return ProductResponse.model_validate_json(cached)
+       print("CACHE MISS")
        result = await self.product.get_by_id(id)
        if result is None:
            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-       return ProductResponse.model_validate(result)
+       response = ProductResponse.model_validate(result)
+       
+       await self.redis.set(cache_key, response.model_dump_json())
+       
+       return response
    
     async def create_new(self, data:ProductCreate) -> ProductResponse:
         cache_key = "product:all"
@@ -46,4 +56,11 @@ class ProductService:
         print("CACHE DELETE")
         return response
    
-   
+    async def update_product(self, id:int, data:ProductUpdate) -> ProductResponse:
+        cache_key = f"product:{id}"
+        result = await self.product.update_product(id, data)
+        if result is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        response = ProductResponse.model_validate(result)
+        await self.redis.delete(cache_key)
+        return response

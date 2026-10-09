@@ -36,7 +36,7 @@ class ProductRepository:
         products = result.scalars().all()
         return products
     
-    async def create_product(self, data:ProductCreate)->Product:
+    async def create_product(self, data:dict)->Product:
         data = Product(
             name=data.name,
             description=data.description,
@@ -47,3 +47,13 @@ class ProductRepository:
         self.db.add(data)
         await self.db.commit()
         return data
+    
+    async def update_product(self, id:int, data:dict) -> Product | None:
+        product = await self.get_by_id(id=id)
+        if product is None:
+            return None
+        for key, value in data.items:
+            setattr(product, key, value)
+        await self.db.commit()
+        await self.db.refresh()
+        return product
