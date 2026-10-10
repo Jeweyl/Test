@@ -15,7 +15,8 @@ class Settings(BaseSettings):
     host: str = Field(validation_alias="POSTGRES_HOST")
     port: int = Field(validation_alias="POSTGRES_PORT")
     database: str = Field(validation_alias="POSTGRES_DB")
-    redis_url: str = Field(validate_default="REDIS_URL")
+    
+    redis_url: str = Field(validate_alias="REDIS_URL")
     
     jwt_secret_key: str = Field(validation_alias="JWT_SECRET_KEY")
     jwt_algorithm: str = Field(
