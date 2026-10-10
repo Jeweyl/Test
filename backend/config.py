@@ -17,4 +17,14 @@ class Settings(BaseSettings):
     database: str = Field(validation_alias="POSTGRES_DB")
     redis_url: str = Field(validate_default="REDIS_URL")
     
+    jwt_secret_key: str = Field(validation_alias="JWT_SECRET_KEY")
+    jwt_algorithm: str = Field(
+        default="HS256",
+        validation_alias="JWT_ALGORITHM",
+    )
+    access_token_expire_minutes: int = Field(
+        default=30,
+        validation_alias="ACCESS_TOKEN_EXPIRE_MINUTES",
+    )
+    
 settings = Settings()

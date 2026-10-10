@@ -58,9 +58,9 @@ class ProductService:
    
     async def update_product(self, id:int, data:ProductUpdate) -> ProductResponse:
         cache_key = f"product:{id}"
-        result = await self.product.update_product(id, data)
+        result = await self.product.update_product(id, data.model_dump)
         if result is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         response = ProductResponse.model_validate(result)
-        await self.redis.delete(cache_key)
+        await self.redis.delete(cache_key, "product:all")
         return response
