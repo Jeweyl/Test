@@ -4,7 +4,7 @@ from sqlalchemy import select
 from models.user import User
 
 class UserRepository:
-    def __inti__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession):
         self.db = db
         
     async def get_all_users(self) -> list[User]:
@@ -28,8 +28,9 @@ class UserRepository:
     async def user_register(self, data:dict) -> User:
         new_user = User(
             username = data.username,
-            password = data.password
+            password = data.hashable_password
         )
-        await self.db.add(new_user)
+        self.db.add(new_user)
+        self.db.flush()
         return new_user
     
