@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from models.user import User
+from security import hash_password
 
 class UserRepository:
     def __init__(self, db: AsyncSession):
@@ -25,12 +26,14 @@ class UserRepository:
         user = result.scalar_one_or_none()
         return user
     
+
+    
     async def user_register(self, data:dict) -> User:
         new_user = User(
             username = data.username,
-            password = data.hashable_password
+            hashable_password = hash_password(data.hashable_password)
         )
         self.db.add(new_user)
-        self.db.flush()
+        await self.db.flush()
         return new_user
     
