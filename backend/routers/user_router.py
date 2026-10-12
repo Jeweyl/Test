@@ -41,7 +41,7 @@ async def create_new_user(data:UserRegistration, session:AsyncSession = Depends(
 async def get_me(current_user = Depends(get_current_user)):
     return current_user
 
-@router.get("/login", response_model=UserResponse)
+@router.post("/login")
 async def login_user(data:OAuth2PasswordRequestForm = Depends(), session:AsyncSession = Depends(get_session), redis:Redis = Depends(get_redis)):
     service = UserService(session, redis)
     user = await service.user_login(data)

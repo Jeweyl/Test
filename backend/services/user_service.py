@@ -1,10 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from fastapi import HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import HTTPException, status
+
 from redis import Redis
 
-import asyncio
 import json
 
 from security import hash_password, verify_password, create_access_token
@@ -65,8 +64,8 @@ class UserService:
         await self.redis.delete("get_all_users")
         return user
             
-    async def user_login(self, data:UserLogin):
-        user_dict = self.user.get_user_by_id(data.id)
+    async def user_login(self, data:dict):
+        user_dict = await self.user.get_user_by_username(data.username)
         if user_dict is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         if not verify_password(data.password, user_dict.hashable_password):
