@@ -34,9 +34,3 @@ class UserRepository:
         self.db.add(new_user)
         await self.db.flush()
         return new_user
-    
-    async def user_login(self, data:dict) -> User:
-        request = select(User).where(User.id == data.id, User.username == data.username)
-        result = await self.db.execute(request)
-        user = result.scalar_one_or_none()
-        return user
