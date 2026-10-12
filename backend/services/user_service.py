@@ -7,7 +7,7 @@ from redis import Redis
 import json
 
 from security import hash_password, verify_password, create_access_token
-from schemas.user_schemas import UserResponse, UserRegistration, UserLogin
+from schemas.user_schemas import UserResponse, UserRegistration, UserLogin, UserLoginResponse
 from repositories.user_repository import UserRepository
 
 
@@ -64,12 +64,12 @@ class UserService:
         await self.redis.delete("get_all_users")
         return user
             
-    async def user_login(self, data:dict):
+    async def user_login(self, data:UserLogin) -> UserLoginResponse:
         user_dict = await self.user.get_user_by_username(data.username)
         if user_dict is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         if not verify_password(data.password, user_dict.hashable_password):
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         token = create_access_token(user_dict.id)
         return {"access_token": token, "token_type": "bearer"}
         

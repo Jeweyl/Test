@@ -7,9 +7,13 @@ class UserRegistration(UserBase):
     password:str = Field(min_length=8, max_length=128)
     
 class UserLogin(UserBase):
-    id:int
     password:str
 class UserResponse(UserBase):
     id:int
     
     model_config = {"from_attributes": True}
+    
+class UserLoginResponse(BaseModel):
+    access_token: str
+    type_token: str = Field(default="bearer")
+    

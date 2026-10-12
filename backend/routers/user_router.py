@@ -6,7 +6,7 @@ from redis import Redis
 from database import get_session
 from redis_client import get_redis
 from services.user_service import UserService
-from schemas.user_schemas import UserResponse, UserRegistration, UserLogin
+from schemas.user_schemas import UserResponse, UserRegistration, UserLoginResponse
 from dependency.auth import get_current_user
 
 router = APIRouter(
@@ -41,7 +41,7 @@ async def create_new_user(data:UserRegistration, session:AsyncSession = Depends(
 async def get_me(current_user = Depends(get_current_user)):
     return current_user
 
-@router.post("/login")
+@router.post("/login", response_model=UserLoginResponse)
 async def login_user(data:OAuth2PasswordRequestForm = Depends(), session:AsyncSession = Depends(get_session), redis:Redis = Depends(get_redis)):
     service = UserService(session, redis)
     user = await service.user_login(data)
