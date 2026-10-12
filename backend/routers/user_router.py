@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from redis import Redis
 
 from database import get_session
 from redis_client import get_redis
 from services.user_service import UserService
-from schemas.user_schemas import UserResponse, UserRegistration
+from schemas.user_schemas import UserResponse, UserRegistration, UserLogin
 from dependency.auth import get_current_user
 
 router = APIRouter(
@@ -39,4 +40,10 @@ async def create_new_user(data:UserRegistration, session:AsyncSession = Depends(
 @router.get("/me", response_model=UserResponse)
 async def get_me(current_user = Depends(get_current_user)):
     return current_user
+
+@router.get("/login", response_model=UserResponse)
+async def login_user(data:OAuth2PasswordRequestForm, session:AsyncSession = Depends(get_session), redis:Redis = Depends(get_redis)):
+    service = UserService(session, redis)
+    user = await service.user_login(data)
+    return user
      

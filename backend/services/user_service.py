@@ -1,13 +1,14 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from redis import Redis
 
 import asyncio
 import json
 
 from security import hash_password
-from schemas.user_schemas import UserResponse, UserRegistration
+from schemas.user_schemas import UserResponse, UserRegistration, UserLogin
 from repositories.user_repository import UserRepository
 
 
@@ -64,7 +65,17 @@ class UserService:
         await self.redis.delete("get_all_users")
         return user
             
-            
+    async def user_login(self, data:OAuth2PasswordRequestForm=Depends()):
+        user_dict = self.get_user_by_username(data.username)
+        new_data = {
+            "id":user_dict.id,
+            "username":user_dict.username
+        }
+        user = UserRepository.user_login(new_data)
+        hashad_password = hash_password(data.password)
+        if not hashad_password == user_dict.hashable_password:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+        return {"access_token": user.id, "token_type": "bearer"}
         
         
         

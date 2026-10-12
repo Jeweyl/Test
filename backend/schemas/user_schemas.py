@@ -7,6 +7,7 @@ class UserRegistration(UserBase):
     password:str = Field(min_length=8, max_length=128)
     
 class UserLogin(UserBase):
+    id:int
     password:str
 class UserResponse(UserBase):
     id:int
