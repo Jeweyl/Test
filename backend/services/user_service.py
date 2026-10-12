@@ -24,7 +24,9 @@ class UserService:
             return [UserResponse.model_validate(user) for user in json.loads(cached)]
         response = await self.user.get_all_users()
         users = [UserResponse.model_validate(user) for user in response]
-        json_data = json.dumps([user.model_dump_json() for user in users])
+        json_data = json.dumps(
+            [user.model_dump() for user in users]
+            )
         await self.redis.set(cache_key, json_data, ex=300)
         return users
     
@@ -49,16 +51,16 @@ class UserService:
         if response is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         user = UserResponse.model_validate(response)
-        await self.redis.set(cache_key, user.model_dump_json    (), ex=300)
+        await self.redis.set(cache_key, user.model_dump_json(), ex=300)
         return user
     
     async def create_new_user(self, data:UserRegistration) -> UserResponse | None:
         async with self.db.begin():
             if await self.user.get_user_by_username(username=data.username) is not None:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User with that username alredy exist")
-            await self.user.user_register(data=data)
-        request = await UserService.get_user_by_username(self, username=data.username)
-        user = UserResponse.model_validate(request)
+            data.password = hash_password(data.password)
+            new_user = await self.user.user_register(data=data)
+        user = UserResponse.model_validate(new_user)
         await self.redis.delete("get_all_users")
         return user
             

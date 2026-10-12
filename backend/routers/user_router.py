@@ -6,6 +6,7 @@ from database import get_session
 from redis_client import get_redis
 from services.user_service import UserService
 from schemas.user_schemas import UserResponse, UserRegistration
+from dependency.auth import get_current_user
 
 router = APIRouter(
     prefix="/user"
@@ -35,4 +36,7 @@ async def create_new_user(data:UserRegistration, session:AsyncSession = Depends(
     new_user = await service.create_new_user(data)
     return new_user
 
+@router.get("/me", response_model=UserResponse)
+async def get_me(current_user = Depends(get_current_user)):
+    return current_user
      

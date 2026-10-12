@@ -26,12 +26,10 @@ class UserRepository:
         user = result.scalar_one_or_none()
         return user
     
-
-    
     async def user_register(self, data:dict) -> User:
         new_user = User(
             username = data.username,
-            hashable_password = hash_password(data.hashable_password)
+            hashable_password = data.password
         )
         self.db.add(new_user)
         await self.db.flush()
