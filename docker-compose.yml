@@ -5,6 +5,13 @@ services:
         - "5432"
     env_file: backend/.env
 
+  db_test:
+    image: postgres:16
+    ports:
+      -5431:5432
+    env_file:
+      - backend/.env
+
   redis:
     image: redis:7-alpine
     expose:

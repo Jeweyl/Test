@@ -15,5 +15,5 @@ class UserResponse(UserBase):
     
 class UserLoginResponse(BaseModel):
     access_token: str
-    type_token: str = Field(default="bearer")
+    token_type: str = Field(default="bearer")
     
