@@ -7,9 +7,23 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from database import Base, db_url
+import os
+
+from database import Base, db_url as db_url_main
+from tests.test_db import db_url_test
 from models import product, user
 
+
+ALEMBIC_DB = os.getenv("ALEMBIC_DB")
+match ALEMBIC_DB:
+    case None:
+        raise ValueError("ALEMBIC_DB is not set")
+    case "main":
+        db_url = db_url_main
+    case "test":
+        db_url = db_url_test
+    case _:
+        raise ValueError(f"Unknown ALEMBIC_DB: {ALEMBIC_DB}")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

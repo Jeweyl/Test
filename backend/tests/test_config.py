@@ -8,7 +8,7 @@ class Settings(BaseSettings):
         "localhost:8000",
         "localhost:3000"
     ]
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     username:str = Field(alias="POSTGRES_USER_TEST")
     password:str = Field(alias="POSTGRES_PASSWORD_TEST")
     host:str = Field(alias="POSTGRES_HOST_TEST")

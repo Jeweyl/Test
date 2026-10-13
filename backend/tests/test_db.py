@@ -1,11 +1,10 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import URL
 
 from tests.test_config import settings
 
 db_url_test = URL.create(
-    drivername="postgresql+asyncopg",
+    drivername="postgresql+asyncpg",
     username=settings.username,
     password=settings.password,
     host=settings.host,
@@ -15,8 +14,6 @@ db_url_test = URL.create(
 
 engine = create_async_engine(url=db_url_test)
 
-class Base(DeclarativeBase):
-    pass
 
 SessionLocal = async_sessionmaker(
     bind=engine,
@@ -25,5 +22,5 @@ SessionLocal = async_sessionmaker(
 )
 
 async def get_session():
-    async with SessionLocal as session:
+    async with SessionLocal() as session:
         yield session
